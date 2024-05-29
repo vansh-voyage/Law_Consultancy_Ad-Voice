@@ -1,0 +1,591 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+      }
+      body {
+        margin: auto;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: #232325;
+      }
+
+      #nav-container {
+        display: flex;
+        flex-direction: column;
+        height: 50%;
+      }
+      nav {
+        height: 100px;
+        width: auto;
+        background-color: #040838;
+        display: flex;
+      }
+      nav a {
+        padding: 20px;
+        color: white;
+        background-color: #232325;
+      }
+      a {
+        text-decoration: none;
+        color: white;
+        /* background-color: #080808; */
+      }
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #232325;
+        padding: 10px 40px;
+      }
+
+      .left-brand {
+        color: white;
+        text-decoration: none;
+      }
+      .img1 {
+        width: 200px;
+        margin-left: 170px;
+        padding: 10px 10px;
+        background-color: #232325;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropbtn {
+        background-color: #232325;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: large;
+        font-weight: 100;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #1c1c1f;
+        min-width: 120px;
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #ddd;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .question-container {
+        border: 0.5px solid rgb(145, 143, 143);
+        width: 75%;
+        padding: 20px;
+        color: white;
+        background-color: #232325;
+        border-radius: 8px;
+        margin-top: auto;
+        margin-bottom: 10px;
+        margin-left: 240px;
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        height: fit-content;
+        font-size: large;
+        font-weight: 50px;
+      }
+      .answer-container {
+        flex-direction: column;
+        width: 85%;
+        padding: 20px;
+        color: white;
+        background-color: #232325;
+        border-radius: 8px;
+        border: 1px white;
+        margin-top: 10px;
+        margin-left: 240px;
+        overflow-y: auto;
+        max-height: calc(100vh - 250px);
+        display: none;
+        font-size: large;
+        font-weight: 50px;
+        
+      }
+      #question-input {
+        width: 60vw;
+        height: 40px;
+        color: white;
+        background-color: #232325;
+        border: none;
+        outline: none;
+        font-size: large;
+      }
+      .submit-icon,
+      .voice-icon {
+        color: white;
+        cursor: pointer;
+        font-size: 24px;
+        margin-left: 15px;
+        background-color: #232325;
+      }
+      /* .voice-icon:hover{
+      } */
+      input::placeholder {
+        color: white;
+      }
+      #question-form {
+        background-color: #232325;
+      }
+      ::-webkit-scrollbar {
+        width: 3px;
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      .loading-animation {
+        margin-left: 0;
+      }
+
+      .loading-animation::after {
+        content: ".";
+        animation: loading 1s infinite;
+        font-size: 55px;
+        color: #49ef2b;
+      }
+
+      @keyframes loading {
+        0% {
+          content: ".";
+        }
+        33% {
+          content: "..";
+        }
+        66% {
+          content: "...";
+        }
+      }
+      .center {
+        margin-left: 200px;
+        display: none;
+      }
+      .main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 200px;
+        color: white;
+      }
+      .suggested {
+        padding-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px;
+      }
+      #suggested-questions{
+        display: none;
+      }
+      #suggested-heading{
+        display: none;
+      }
+      .suggest {
+        padding-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px;
+      }
+      .suggestion {
+        display: flex;
+        color: white;
+        background-color: #232325;
+        border: 0.5px solid rgb(145, 143, 143);
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin: 5px;
+        font-size: large;
+        cursor: pointer;
+      }
+      .left-container {
+        height: 100vh;
+        width: 230px;
+        padding-top: 0;
+        margin-top: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        color: white;
+        background-color: #080808;
+        z-index: 100; /* Ensure it's above the nav */
+      }
+      .left-container.hidden {
+        width: 0px; /* Collapse container on hide */
+      }
+
+      .arrow-icon {
+        font-size: 20px; /* Adjust icon size */
+        margin-top: 30px;
+        margin-left: 30px;
+        color: #ffffff; /* Set icon color */
+        cursor: pointer; /* Make icon clickable */
+      }
+      .answer-icon {
+        width: 25px; /* Adjust size as needed */
+        height: 25px; /* Adjust size as needed */
+        margin-right: 15px; /* Adjust spacing */
+        border-radius: 12px;
+        border: 1px solid rgb(255, 255, 255);
+      }
+      .advoice {
+        margin-bottom: 10px;
+        padding-top: 5px;
+      }
+      .page-content {
+        margin-left: 10px; /* Adjust margin as needed (matches left container width) */
+        margin-right: 50px;
+        transition: margin-left 0.3s ease-in-out; /* Smooth transition effect for content shift */
+      }
+
+      /* Media query for responsiveness */
+      @media screen and (max-width: 768px) {
+        .question-container,
+        .answer-container {
+          width: 90%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        #question-input {
+          width: calc(100% - 50px); /* Adjust width based on icon size */
+          margin-right: 5px; /* Add some space between input and icons */
+        }
+
+        .submit-icon,
+        .voice-icon {
+          font-size: 20px; /* Reduce icon size */
+        }
+      }
+      .upload-icon {
+      cursor: pointer;
+  }
+  .upload{
+    color: white;
+    margin-left: 700px;
+    margin-top: 40px;
+  }
+  .pdf-upload{
+    margin-top: 180px;
+  }
+  .img2{
+    margin-left: 70px;
+    margin-top: 20px;
+}
+  </style>
+    <script
+      src="https://kit.fontawesome.com/80f00f156f.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="left-container">
+      <i class="arrow-icon fas fa-chevron-right" title="Toggle Sidebar"></i>
+    </div>
+    <div class="page-content">
+      <nav class="nav">
+        <a href="/" class="navbar-brand">
+          <img class="img1" src="../static/img/logo4.png" alt="" width="150px" />
+        </a>
+        <div class="dropdown">
+          <button class="dropbtn" id="dropdownBtn">
+            Choose your Legal Cases
+          </button>
+          <!-- <div class="dropdown-content">
+            <a href="#" onclick="setCaseType('Criminal')">Criminal</a>
+            <a href="#" onclick="setCaseType('Civil')">Civil</a>
+            <a href="#" onclick="setCaseType('Marriage')">Marriage</a>
+            <a href="#" onclick="setCaseType('Divorce')">Divorce</a>
+            <a href="#" onclick="setCaseType('Motor Vehicle')">Motor Vehicle</a>
+        </div> -->
+        </div>
+      </nav>
+      <div class="upload" id="uploadSection">
+        <h1 class="pdf-upload">Upload a PDF file</h1>
+        <form id="uploadForm"  enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput" style="display: none;">
+            <label for="fileInput" style="cursor: pointer;"> <img class="img2" src="../static/img/pdf.png" alt="" width="150px" /></label>
+        </form>
+      </div>
+      <div class="container">
+        <div class="answer-container" id="answerContainer"></div>
+        <div class="question-container">
+          <form id="question-form">
+            <input
+              id="question-input"
+              type="text"
+              placeholder="Enter any Question... "
+            />
+            <i
+              class="fas fa-paper-plane submit-icon"
+              onclick="sendQuestion()"
+              title="Send Message"
+            ></i>
+            <i
+              class="fas fa-microphone voice-icon"
+              onclick="startVoiceRecognition()"
+              title="Record Voice"
+            ></i>
+          </form>
+        </div>
+      </div>
+      <div class="center">
+        <div class="main">
+          <h2 id="suggested-heading">Hello how i help you today?</h2>
+        </div>
+        <div class="suggested" id="suggested-questions">
+          <button
+            class="suggestion"
+            onclick="populateQuestion('What is pdf about')"
+          >
+            What is pdf about
+          </button>
+          <button
+            class="suggestion"
+            onclick="populateQuestion('Tell me the summary of pdf?')"
+          >
+            Tell me the summary of pdf
+          </button>
+          <button
+            class="suggestion"
+            onclick="populateQuestion('What is highlights of pdf?')"
+          >
+            What is highlights of pdf
+          </button>
+        </div>
+      </div>
+      <!-- <div class="center">
+        <div class="main">
+          <h2 id="suggested-heading">Hello how can i help you today?</h2>
+        </div>
+        <div class="suggest" id="suggested-questions">
+          <button class="suggestion"><a href="/try consulting">Our Cunsultancy</a></button>
+          <button class="suggestion"><a href="/pdf">Upload Pdf</a></button>
+        </div>
+      </div>
+    </div> -->
+
+    <script>
+      document
+        .getElementById("question-input")
+        .addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            sendQuestion();
+          }
+        });
+
+      function sendQuestion() {
+        var question = document.getElementById("question-input").value.trim();
+        if (question === "") return;
+
+        var answerContainer = document.getElementById("answerContainer");
+        var questionElement = document.createElement("p");
+        questionElement.textContent = "You: ";
+
+        // Create a span element for the question text
+        var questionTextSpan = document.createElement("span");
+        questionTextSpan.textContent = question;
+        var lineBreak = document.createElement("br");
+        // Append the question text span to the question element
+        questionElement.appendChild(questionTextSpan);
+
+        answerContainer.style.display = "flex";
+        hideSuggestedQuestions();
+        scrollToBottom();
+        document.getElementById("question-input").value = "";
+
+        // Show loading animation
+        var loadingElement = document.createElement("div");
+        loadingElement.classList.add("loading-animation");
+        answerContainer.appendChild(loadingElement);
+
+        fetch("/ask pdf", {
+          method: "POST",
+          body: new URLSearchParams({
+            question: question,
+          }),
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            // Remove loading animation
+            answerContainer.removeChild(loadingElement);
+
+            var answerText = data;
+
+            var answerElement = document.createElement("p");
+            var iconImage = document.createElement("img");
+            // Replace 'path/to/your/icon.png' with the actual path to your image
+            iconImage.src = "https://i.ibb.co/Fh3pTsm/insaaf-ka-tarazu.png";
+            iconImage.classList.add("answer-icon"); // Add a class for styling (optional)
+            var adVoiceSpan = document.createElement("span");
+            adVoiceSpan.textContent = "Ad-voice ";
+            adVoiceSpan.classList.add("ad-voice");
+
+            answerElement.appendChild(iconImage);
+            answerElement.appendChild(adVoiceSpan);
+            var lineBreak = document.createElement("br");
+            answerElement.appendChild(lineBreak);
+            answerElement.appendChild(document.createElement("br"));
+            answerElement.appendChild(document.createTextNode(answerText));
+
+            // answerElement.textContent += " " + processedAnswer;
+            // answerElement.textContent = "ChatGPT: " + processedAnswer;
+
+            answerContainer.appendChild(questionElement);
+            answerContainer.appendChild(document.createElement("br"));
+            // answerContainer.appendChild(lineBreak);
+            answerContainer.appendChild(answerElement);
+            answerContainer.appendChild(document.createElement("br"));
+            // answerContainer.appendChild(lineBreak);
+            scrollToBottom();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Remove loading animation on error
+            answerContainer.removeChild(loadingElement);
+          });
+      }
+      function startVoiceRecognition() {
+        var recognition = new webkitSpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.start();
+
+        setTimeout(function () {
+          recognition.stop();
+          document.querySelector(".voice-icon").style.color = "white";
+        }, 30000);
+
+        document.querySelector(".voice-icon").style.color = "red";
+
+        recognition.onresult = function (event) {
+          var speechResult = event.results[0][0].transcript;
+          document.getElementById("question-input").value = speechResult;
+          sendQuestion();
+          document.querySelector(".voice-icon").style.color = "white";
+        };
+
+        recognition.onend = function () {
+          console.log("Voice recognition ended.");
+        };
+      }
+      
+      document.getElementById('fileInput').addEventListener('change', function() {
+            var form = document.getElementById('uploadForm');
+            var formData = new FormData(form);
+            var xhr = new XMLHttpRequest();
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            alert(response.message);
+                            document.getElementById('uploadSection').style.display = 'none';
+                            document.getElementById('suggested-questions').style.display = 'flex';
+                            document.getElementById('suggested-heading').style.display = 'flex';
+                        } else {
+                            document.getElementById('message').innerHTML = response.message;
+                        }
+                    } else {
+                        document.getElementById('message').innerHTML = "An error occurred while processing the request.";
+                    }
+                }
+            };
+            
+            xhr.open('POST', '/convert', true);
+            xhr.send(formData);
+        });
+
+      function scrollToBottom() {
+        var answerContainer = document.getElementById("answerContainer"); // Corrected ID
+        answerContainer.scrollTop = answerContainer.scrollHeight;
+      }
+      function populateQuestion(question) {
+        document.getElementById("question-input").value = question;
+        sendQuestion();
+        hideSuggestedQuestions();
+      }
+
+      function hideSuggestedQuestions() {
+        document.getElementById("suggested-questions").style.display = "none";
+        document.getElementById("suggested-heading").style.display = "none";
+      }
+      const leftContainer = document.querySelector(".left-container");
+      const arrowIcon = document.querySelector(".arrow-icon");
+      const logoImg = document.querySelector(".img1");
+      const pageContent = document.querySelector('.page-content');
+
+      let isHidden = false; // Track container visibility state
+
+      leftContainer.addEventListener("click", () => {
+        isHidden = !isHidden; // Toggle visibility state
+        logoImg.style.display = isHidden ? "none" : "block";
+        leftContainer.classList.toggle("hidden");
+        pageContent.style.marginLeft = isHidden ? '0' : '20px';
+        pageContent.style.marginRight = isHidden ? '0' : '30px';
+        arrowIcon.style.left = isHidden ? '0' : 'calc(100% - 20px)'; 
+        // Optionally update icon direction based on visibility
+        if (isHidden) {
+          arrowIcon.classList.remove("fas", "fa-chevron-right");
+          arrowIcon.classList.add("fas", "fa-chevron-right"); // Change to left arrow
+        } else {
+          arrowIcon.classList.remove("fas", "fa-chevron-left");
+          arrowIcon.classList.add("fas", "fa-chevron-leftt"); // Change to right arrow
+        }
+      });
+
+      document
+        .getElementById("question-input")
+        .addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            sendQuestion();
+          }
+        });
+    </script>
+  </body>
+</html> 
+

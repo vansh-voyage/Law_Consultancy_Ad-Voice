@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+    }
+
+    body {
+      margin: auto;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #232325;
+    }
+
+    #nav-container {
+      display: flex;
+      flex-direction: column;
+      height: 50%;
+    }
+
+    nav {
+      height: 100px;
+      width: auto;
+      background-color: #040838;
+      display: flex;
+    }
+
+    nav a {
+      padding: 20px;
+      color: white;
+      background-color: #232325;
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+      /* background-color: #080808; */
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #232325;
+      padding: 10px 40px;
+    }
+
+    .left-brand {
+      color: white;
+      text-decoration: none;
+    }
+
+    .img1 {
+      width: 200px;
+      margin-left: 170px;
+      padding: 10px 10px;
+      background-color: #232325;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropbtn {
+      background-color: #232325;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: large;
+      font-weight: 100;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #1c1c1f;
+      min-width: 120px;
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .question-container {
+      border: 0.5px solid rgb(145, 143, 143);
+      width: 75%;
+      padding: 20px;
+      color: white;
+      background-color: #232325;
+      border-radius: 8px;
+      margin-top: auto;
+      margin-bottom: 10px;
+      margin-left: 240px;
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      height: fit-content;
+      font-size: large;
+      font-weight: 50px;
+    }
+
+    .answer-container {
+      flex-direction: column;
+      width: 85%;
+      padding: 20px;
+      color: white;
+      background-color: #232325;
+      border-radius: 8px;
+      border: 1px white;
+      margin-top: 10px;
+      margin-left: 240px;
+      overflow-y: auto;
+      max-height: calc(100vh - 250px);
+      display: none;
+      font-size: large;
+      font-weight: 50px;
+
+    }
+
+    #question-input {
+      width: 60vw;
+      height: 40px;
+      color: white;
+      background-color: #232325;
+      border: none;
+      outline: none;
+      font-size: large;
+    }
+
+    .submit-icon,
+    .pdf-icon,
+    .voice-icon {
+      color: white;
+      cursor: pointer;
+      font-size: 24px;
+      margin-left: 15px;
+      background-color: #232325;
+    }
+
+    /* .voice-icon:hover{
+      } */
+    input::placeholder {
+      color: white;
+    }
+
+    #question-form {
+      background-color: #232325;
+    }
+
+    ::-webkit-scrollbar {
+      width: 3px;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    .loading-animation {
+      margin-left: 0;
+    }
+
+    .loading-animation::after {
+      content: ".";
+      animation: loading 1s infinite;
+      font-size: 55px;
+      color: #49ef2b;
+    }
+
+    @keyframes loading {
+      0% {
+        content: ".";
+      }
+
+      33% {
+        content: "..";
+      }
+
+      66% {
+        content: "...";
+      }
+    }
+
+    .center {
+      margin-left: 200px;
+    }
+
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 200px;
+      color: white;
+    }
+
+    .suggested {
+      padding-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 5px;
+    }
+
+    .suggest {
+      padding-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 5px;
+    }
+
+    .suggestion {
+      display: flex;
+      color: white;
+      background-color: #232325;
+      border: 0.5px solid rgb(145, 143, 143);
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin: 5px;
+      font-size: large;
+      cursor: pointer;
+    }
+
+    .left-container {
+      height: 100vh;
+      width: 230px;
+      padding-top: 0;
+      margin-top: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      color: white;
+      background-color: #080808;
+      z-index: 100;
+      /* Ensure it's above the nav */
+    }
+
+    .left-container.hidden {
+      width: 0px;
+      /* Collapse container on hide */
+    }
+
+    .arrow-icon {
+      font-size: 20px;
+      /* Adjust icon size */
+      margin-top: 30px;
+      margin-left: 30px;
+      color: #ffffff;
+      /* Set icon color */
+      cursor: pointer;
+      /* Make icon clickable */
+    }
+
+    .answer-icon {
+      width: 25px;
+      /* Adjust size as needed */
+      height: 25px;
+      /* Adjust size as needed */
+      margin-right: 15px;
+      /* Adjust spacing */
+      border-radius: 12px;
+      border: 1px solid rgb(255, 255, 255);
+    }
+
+    .advoice {
+      margin-bottom: 10px;
+      padding-top: 5px;
+    }
+
+    .page-content {
+      margin-left: 10px;
+      /* Adjust margin as needed (matches left container width) */
+      margin-right: 50px;
+      transition: margin-left 0.3s ease-in-out;
+      /* Smooth transition effect for content shift */
+    }
+
+    /* Media query for responsiveness */
+    @media screen and (max-width: 768px) {
+
+      .question-container,
+      .answer-container {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      #question-input {
+        width: calc(100% - 50px);
+        /* Adjust width based on icon size */
+        margin-right: 5px;
+        /* Add some space between input and icons */
+      }
+
+      .submit-icon,
+      .voice-icon {
+        font-size: 20px;
+        /* Reduce icon size */
+      }
+    }
+
+    .upload-icon {
+      cursor: pointer;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://kit.fontawesome.com/80f00f156f.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="left-container">
+    <i class="arrow-icon fas fa-chevron-right" title="Toggle Sidebar"></i>
+  </div>
+  <div class="page-content">
+    <nav class="nav">
+      <a href="/" class="navbar-brand">
+        <img class="img1" src="../static/img/logo4.png" alt="" width="150px" />
+      </a>
+      <!-- <a href="/pdf">pdf upload</a> -->
+      <div class="dropdown">
+        <button class="dropbtn" id="dropdownBtn">
+          Choose your Legal Cases
+        </button>
+        <div class="dropdown-content">
+          <a href="#" onclick="setCaseType('Criminal')">Criminal</a>
+          <a href="#" onclick="setCaseType('Civil')">Civil</a>
+          <a href="#" onclick="setCaseType('Marriage')">Marriage</a>
+          <a href="#" onclick="setCaseType('Divorce')">Divorce</a>
+          <a href="#" onclick="setCaseType('Motor Vehicle')">Motor Vehicle</a>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="answer-container" id="answerContainer"></div>
+      <div class="question-container">
+        <form id="question-form">
+          <input id="question-input" type="text" placeholder="Enter any Question... " />
+          <i class="fas fa-paper-plane submit-icon" onclick="sendQuestion()" title="Send Message"></i>
+          <i class="fas fa-microphone voice-icon" onclick="startVoiceRecognition()" title="Record Voice"></i>
+          <a href="/pdf"><i class="fas fa-file-pdf pdf-icon" title="Record Voice"></i></a>
+        </form>
+      </div>
+    </div>
+    <div class="center">
+      <div class="main">
+        <h2 id="suggested-heading">Hello how can i help you today?</h2>
+      </div>
+      <div class="suggested" id="suggested-questions">
+        <button class="suggestion" onclick="populateQuestion('What is IPC code?')">
+          What is IPC code
+        </button>
+        <button class="suggestion" onclick="populateQuestion('What are criminal offenses?')">
+          What are criminal offenses
+        </button>
+        <button class="suggestion" onclick="populateQuestion('What are Indian law?')">
+          State me The Indian law
+        </button>
+      </div>
+    </div>
+    <!-- <div class="center">
+        <div class="main">
+          <h2 id="suggested-heading">Hello how can i help you today?</h2>
+        </div>
+        <div class="suggest" id="suggested-questions">
+          <button class="suggestion"><a href="/try consulting">Our Cunsultancy</a></button>
+          <button class="suggestion"><a href="/pdf">Upload Pdf</a></button>
+        </div>
+      </div>
+    </div> -->
+
+
+    <script>
+      $(document).ready(function () {
+        $('#question-form').on('submit', function (event) {
+          event.preventDefault();
+          sendQuestion();
+        });
+
+        $('#question-input').on('keydown', function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            sendQuestion();
+          }
+        });
+
+        function sendQuestion() {
+          var question = $('#question-input').val().trim();
+          if (question === "") return;
+
+          var answerContainer = $('#answerContainer');
+          var questionElement = $('<p>').text("You: " + question);
+          answerContainer.append('<br>');
+          answerContainer.append(questionElement).append('<br>').show();
+          hideSuggestedQuestions();
+          scrollToBottom();
+          $('#question-input').val("");
+
+          // Show loading animation
+          var loadingElement = $('<div>').addClass('loading-animation');
+          answerContainer.append(loadingElement);
+
+          $.ajax({
+            url: '/ask_question',
+            type: 'POST',
+            data: { question: question },
+            success: function (response) {
+              // Remove loading animation
+              loadingElement.remove();
+              console.log("Raw response:", response);
+ 
+              // Ensure the response is properly parsed as JSON
+              const jsonResponse = typeof response === 'string' ? JSON.parse(response) : response;
+
+              // Log the parsed response for debugging
+              console.log("Parsed response:", jsonResponse);
+              // Ensure the response is properly parsed as JSON
+              // const jsonResponse = JSON.parse(response);
+
+              // Extract HTML content from the response
+              var answerText = jsonResponse.response;
+
+              // var answerText = response.response;
+              var answerElement = $('<div>');
+
+              var iconImage = $('<img>').attr('src', 'https://i.ibb.co/Fh3pTsm/insaaf-ka-tarazu.png').addClass('answer-icon');
+              var adVoiceSpan = $('<span>').text('Ad-voice ').addClass('ad-voice');
+
+              var iconContainer = $('<div>').append(iconImage).append(adVoiceSpan).append('<br>');
+              answerElement.append(iconContainer).append('<br>').append(answerText);
+              // answerElement.html(answerText);
+
+              answerContainer.append(answerElement).append('<br>');
+              scrollToBottom();
+            },
+            error: function (error) {
+              console.error('Error:', error);
+              // Remove loading animation on error
+              loadingElement.remove();
+            }
+          });
+        }
+
+        function startVoiceRecognition() {
+          var recognition = new webkitSpeechRecognition();
+          recognition.lang = "en-US";
+          recognition.start();
+
+          setTimeout(function () {
+            recognition.stop();
+            $('.voice-icon').css('color', 'white');
+          }, 30000);
+
+          $('.voice-icon').css('color', 'red');
+
+          recognition.onresult = function (event) {
+            var speechResult = event.results[0][0].transcript;
+            $('#question-input').val(speechResult);
+            sendQuestion();
+            $('.voice-icon').css('color', 'white');
+          };
+
+          recognition.onend = function () {
+            console.log("Voice recognition ended.");
+          };
+        }
+
+        function scrollToBottom() {
+          var answerContainer = $('#answerContainer');
+          answerContainer.scrollTop(answerContainer[0].scrollHeight);
+        }
+      });
+      function populateQuestion(question) {
+        $('#question-input').val(question);
+        sendQuestion();
+        hideSuggestedQuestions();
+      }
+
+      function hideSuggestedQuestions() {
+        $('#suggested-questions').hide();
+        $('#suggested-heading').hide();
+      }
+
+      const leftContainer = $('.left-container');
+      const arrowIcon = $('.arrow-icon');
+      const logoImg = $('.img1');
+      const pageContent = $('.page-content');
+
+      let isHidden = false;
+
+      leftContainer.on('click', function () {
+        isHidden = !isHidden;
+        logoImg.toggle(!isHidden);
+        leftContainer.toggleClass('hidden');
+        pageContent.css({
+          marginLeft: isHidden ? '0' : '20px',
+          marginRight: isHidden ? '0' : '30px'
+        });
+        arrowIcon.css('left', isHidden ? '0' : 'calc(100% - 20px)');
+        if (isHidden) {
+          arrowIcon.removeClass("fa-chevron-left").addClass("fa-chevron-right");
+        } else {
+          arrowIcon.removeClass("fa-chevron-right").addClass("fa-chevron-left");
+        }
+      });
+
+    </script>
+
+</body>
+
+</html>
